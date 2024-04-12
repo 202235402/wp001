@@ -21,4 +21,5 @@ def update_name():
 
 @app.delete("/")
 def delete_name():
-    return {"name": ""}
+    user_name = ""
+    return {"nme": "has been deleted"}
