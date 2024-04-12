@@ -10,13 +10,13 @@ def read_name():
     return {"name": user_name}
 
 @app.post("/")
-def create_name(new_name: str, q: Union[str, None] = None):
+def create_name(new_name: str):
     return {"name": new_name}
 
 @app.put("/")
-def update_name(updated_name: str, q: Union[str, None] = None):
+def update_name(updated_name: str):
     user_name = updated_name
-    return {"name": user_name, "q": q}
+    return {"name": user_name}
 
 @app.delete("/")
 def delete_name():
