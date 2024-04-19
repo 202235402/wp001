@@ -1,24 +1,16 @@
-from typing import Union
 from fastapi import FastAPI
+
+import requests
 
 app = FastAPI()
 
-user_name = "minju"
-
 @app.get("/")
-def read_name():
-    return {"name": user_name}
+def root():
+    URL = "https://bigdata.kepco.co.kr/openapi/v1/powerUsage/industryType.do?year=2020&month=11&metroCd=11&cityCd=110&bizCd=C&apiKey=xxx&returnType=json"
+  
+    contents = request.get(URL).text
 
-@app.post("/")
-def create_name(new_name: str):
-    return {"name": new_name}
-
-@app.put("/")
-def update_name(updated_name: str):
-    user_name = updated_name
-    return {"name": user_name}
-
-@app.delete("/")
-def delete_name():
-    user_name = ""
-    return {"name": "has been deleted"}
+    return { "message": contents }
+@app.get("/home")
+def home():
+    return { "message": "Home!" }
