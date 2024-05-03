@@ -40,7 +40,7 @@ def get_db():
 
 @app.post("/todos/")
 def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
-    db_todo = Todo(title=todo.title, description=todo.description=todo.description)
+    db_todo = Todo(title=todo.title, description=todo.description)
     db.add(db_todo)
     db.commit()
     db.refresh(db_todo)
