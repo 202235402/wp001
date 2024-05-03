@@ -1,14 +1,47 @@
-from fastapi import FastAPI
+SQLALCHEMY_DATABASE_URL = "sqllite:///../todo.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmarker(autocommit=False, autoflush=False, bind=engine)
 
-import requests
+Base = declarative_base()
 
 app = FastAPI()
 
+class Todo(Base):
+    __tablename__ = "todos"
+    __allow_unmapped__ = True
 
-@app.get("/")
-def root():
-    URL = "https://bigdata.kepco.co.kr/openapi/v1/powerUsage/industryType.do?year=2020&month=11&metroCd=11&cityCd=110&bizCd=C&apiKey=8U23O1wm7905rkrBzb5z0NCpQPIMPqoUCJA22Bw9&returnType=json"
-  
-    contents = requests.get(URL).text
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    decription = Column(String, index=True)
 
-    return { "message": contents }
+Base.metadata.create_all(bind=engine)
+
+class TodoCreate(BaseModel):
+    title: str
+    description: str
+
+class TodoUpdate(BaseModel):
+    title: str
+    description: str
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally: 
+        db.close()
+
+@app.post("/todos/")
+def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
+    db.add(db_todo)
+    db.commit()
+    db.refresh(db_todo)
+    return db_todo
+
+@app.get("/todos/{todo_id}")
+def read_todo(todo_id: int, db: Session = Depends(get_db)):
+    db_todo = db_query(Todo).filter(Todo.id == todo_id),first()
+    if db_todo is None:
+        raise HTTPException(status_code=404, detail="todo not found")
+    return db_todo
+
